@@ -15,6 +15,23 @@
     transform: scale(1.05);
   }
 
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible &__art {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 3px rgba(42, 110, 240, 0.7);
+  }
+
+  &--selected &__art {
+    box-shadow: 0 0 0 3px #2a6ef0;
+  }
+
+  &--selected &__title {
+    font-weight: 600;
+  }
+
   &__art {
     height: 150px;
     width: 150px;

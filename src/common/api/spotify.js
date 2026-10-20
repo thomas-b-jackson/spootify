@@ -85,9 +85,18 @@ async function search(query, type) {
   // Response is keyed by the pluralised type, e.g. { albums: { items } }.
   const items = data[`${type}s`]?.items ?? [];
 
-  // Search results (notably playlists) can contain nulls, and DiscoverItem
-  // expects an `images` array with at least one entry, so filter defensively.
-  return items.filter((item) => item && item.images && item.images.length);
+  // Search results (notably playlists) can contain nulls. Normalise each item
+  // to the shape the UI needs, including `id`/`type` for the Spotify embed.
+  // Tracks carry their artwork under `album.images` rather than top-level.
+  return items
+    .filter(Boolean)
+    .map((item) => ({
+      id: item.id,
+      name: item.name,
+      type: item.type,
+      images: item.images && item.images.length ? item.images : item.album?.images ?? []
+    }))
+    .filter((item) => item.id && item.images.length);
 }
 
 /**
@@ -106,9 +115,10 @@ export function getFeaturedPlaylists() {
 }
 
 /**
- * Artists, used to populate the "BROWSE" block (the original categories
- * endpoint is no longer available to development-mode apps).
+ * Individual tracks, used to populate the "BROWSE" block. Tracks are used here
+ * (rather than the restricted categories endpoint) so every Discover item is
+ * directly playable via the Spotify embed.
  */
 export function getCategories() {
-  return search('genre', 'artist');
+  return search('year:2024', 'track');
 }

@@ -30,6 +30,25 @@
     height: 70px;
   }
 
+  // When the Spotify embed is active, let the iframe fill the bar.
+  &--embed {
+    height: 152px;
+    padding-left: 0;
+    padding-right: 0;
+    overflow: hidden;
+
+    @media only screen and (max-height: 775px) {
+      height: 152px;
+    }
+
+    > iframe {
+      display: block;
+      border: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
   svg {
     transition: transform 0.2s ease-in-out;
     cursor: pointer;
